@@ -96,6 +96,3 @@ sketch
 Thumbs.db
 package-lock.json
 appState
-
-# Audios
-*.mp3
