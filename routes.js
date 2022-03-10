@@ -24,19 +24,33 @@ routes.get('/audio/:fileName', async (req, res) => {
       'Content-Length': stat.size
   });
 
-  const stream = fs.createReadStream(filePath, { highWaterMark,  flag: '--unhandled-rejections=strict' });
-  stream.on('end', () => {
-    stream.pause();
-    stream.close();
-    stream.destroy();
-    console.log('acabou')
 
-  });
+  try {
+    const stream = fs.createReadStream(filePath, { highWaterMark,  flag: '--unhandled-rejections=strict' });
 
-  stream.on("error", err => reject(err));
-  // stream.on("data", chunk => hash.update(chunk));
+    stream.on('end', () => {
+      stream.pause();
+      stream.close();
+      stream.destroy();
+      console.log('acabou')
   
-  stream.pipe(res);
+    });
+  
+    stream.on("error", err => reject(err));
+    
+    stream.pipe(res);
+
+   } catch (ex) {
+
+    if (ex instanceof TypeError) {
+     Promise.resolve();
+     return;
+    }
+   }
+
+
+  
+
 
 });
 
@@ -84,14 +98,14 @@ routes.get('/getAudios', (_req, res) => {
   res.send(readDir(testFolder));
 });
 
-routes.post('/upload', (req, res) => {
+routes.post('/upload', async (req, res) => {
     const __dirname = path.resolve(path.dirname(''));
 
     const newpath = __dirname + "/audios/";
     const file = req.files.file;
     const filename = file.name.replace(/\s/g, '');
   
-    file.mv(`${newpath}${filename}`, (err) => {
+    await file.mv(`${newpath}${filename}`, (err) => {
       if (err) {
         res.status(500).send({ message: "File upload failed", code: 200 });
       }
