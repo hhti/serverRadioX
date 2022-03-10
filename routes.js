@@ -3,13 +3,10 @@ import fs from 'fs';
 import path from 'path';
 import getStat from 'util';
 
-
 const routes = Router();
 
 routes.get('/audio/:fileName', async (req, res) => {
   const fileName = req.params.fileName;
-
-  console.log(fileName)
 
   const highWaterMark =  16;
 
@@ -24,7 +21,6 @@ routes.get('/audio/:fileName', async (req, res) => {
       'Content-Length': stat.size
   });
 
-
   try {
     const stream = fs.createReadStream(filePath, { highWaterMark,  flag: '--unhandled-rejections=strict' });
 
@@ -37,7 +33,6 @@ routes.get('/audio/:fileName', async (req, res) => {
     });
   
     stream.on("error", err => reject(err));
-    
     stream.pipe(res);
 
    } catch (ex) {
@@ -47,10 +42,6 @@ routes.get('/audio/:fileName', async (req, res) => {
      return;
     }
    }
-
-
-  
-
 
 });
 
