@@ -3,7 +3,7 @@ import express from 'express';
 import fileupload from 'express-fileupload';
 import routes from './routes.js';
 
-const port = 3005;
+const port = process.env.PORT || 3005;
 
 const app = express();
 app.use(express.json());
