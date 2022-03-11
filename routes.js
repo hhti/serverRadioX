@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import fs, { readdirSync } from 'fs';
+import fs, { existsSync, mkdirSync, readdirSync } from 'fs';
 import path from 'path';
 import getStat from 'util';
 
@@ -77,11 +77,15 @@ routes.post('/upload', async (req, res) => {
   const { file } = req.files;
   const filename = file.name.replace(/\s/g, '');
 
+  if (!existsSync(newpath)) {
+    mkdirSync(newpath);
+  }
+
   await file.mv(`${newpath}${filename}`, (err) => {
     if (err) {
-      res.status(500).send({ message: 'File upload failed', code: 200 });
+      return res.status(500).send({ message: 'File upload failed', error: err.message });
     }
-    res.status(200).send({ message: 'File Uploaded', code: 200 });
+    return res.status(200).send({ message: 'File Uploaded' });
   });
 });
 
