@@ -1,7 +1,19 @@
+/* eslint-disable import/no-unresolved */
 import cors from 'cors';
+import 'dotenv/config';
 import express from 'express';
 import fileupload from 'express-fileupload';
+import { initializeApp, cert } from 'firebase-admin/app';
 import routes from './routes.js';
+
+initializeApp({
+  credential: cert({
+    project_id: process.env.project_id,
+    client_email: process.env.client_email,
+    private_key: process.env.private_key,
+  }),
+  storageBucket: process.env.storageBucket,
+});
 
 const port = process.env.PORT || 3005;
 
