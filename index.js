@@ -10,7 +10,7 @@ initializeApp({
   credential: cert({
     project_id: process.env.project_id,
     client_email: process.env.client_email,
-    private_key: process.env.private_key,
+    private_key: JSON.parse(process.env.private_key)[0],
   }),
   storageBucket: process.env.storageBucket,
 });
